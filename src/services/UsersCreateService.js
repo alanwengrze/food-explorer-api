@@ -6,6 +6,10 @@ class UsersCreateService{
   }
   async execute({name, email, password}){
 
+    if(!name || !email || !password) {
+      throw new AppError("Todos os campos devem ser preenchidos.", 400);
+    }
+
     const emailExists = await this.userRepository.findByEmail(email);
 
     if(emailExists) {
@@ -17,7 +21,6 @@ class UsersCreateService{
     const user = await this.userRepository.create({name, email, password: hashedPassword});
     
     return user;
-
   }
 }
 
