@@ -1,5 +1,9 @@
 const AppError = require('../utils/AppError');
 const { compare } = require('bcryptjs');
+
+const authConfig = require('../configs/auth');
+const { sign } = require('jsonwebtoken')
+
 const UsersRepository = require('../repositories/UsersRepository');
 class SessionsController{
 
@@ -18,8 +22,15 @@ class SessionsController{
     if(!passwordMatched){
       throw new AppError('E-mail ou senha inválidos', 401);
     }
-    
-    response.json({ email, password });
+
+    const { secret, expiresIn } = authConfig.jwt;
+
+    const token = sign({}, secret, {
+      subject: String(user.id),
+      expiresIn
+    });
+
+    response.status(201).json({ user, token });
   }
 }
 
