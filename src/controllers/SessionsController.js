@@ -1,27 +1,17 @@
-const AppError = require('../utils/AppError');
-const { compare } = require('bcryptjs');
-
 const authConfig = require('../configs/auth');
 const { sign } = require('jsonwebtoken')
 
 const UsersRepository = require('../repositories/UsersRepository');
+const SessionsCreateService = require('../services/SessionsCreateService');
 class SessionsController{
 
   async create(request, response){
     const { email, password } = request.body;
 
     const usersRepository = new UsersRepository();
-    const user = await usersRepository.findByEmail(email);
+    const sessionsCreateService = new SessionsCreateService(usersRepository);
 
-    if(!user){
-      throw new AppError('E-mail ou senha inválidos', 401);
-    }
-
-    const passwordMatched = await compare(password, user.password);
-
-    if(!passwordMatched){
-      throw new AppError('E-mail ou senha inválidos', 401);
-    }
+    const user = await sessionsCreateService.execute({ email, password });
 
     const { secret, expiresIn } = authConfig.jwt;
 
