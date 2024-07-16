@@ -1,75 +1,30 @@
 const knex = require('../database/knex');
 const AppError = require('../utils/AppError');
+
+const DishesRepository = require('../repositories/DishesRepository');
+const DishesCreateService = require('../services/DishesCreateService');
+const DishesIndexService = require('../services/DishesIndexService');
+const DishesUpdateService = require('../services/DishesUpdateService');
 class DishesController {
 
   async create(request, response) {
     const {name, description, price, category, ingredients} = request.body;
 
-    const [ dishes_id ] = await knex('dishes').insert({
-      name,
-      description,
-      price,
-      category
-    });
+    const dishesRepository = new DishesRepository();
+    const dishesCreateService = new DishesCreateService(dishesRepository);
+    const dish = await dishesCreateService.execute({name, description, price, category, ingredients});
 
-      const ingredientsInsert = ingredients.map(name =>{
-        return{
-          name,
-          dishes_id
-        }
-    });
-    await knex('ingredients').insert(ingredientsInsert);
-
-    return response.status(201).json({
-      dishes_id,
-      ingredientsInsert
-    });
+    return response.status(201).json(dish);
   }
 
   async index(request, response) {
     const { name, category, ingredients } = request.query;
-    let dishes;
 
-    if(!name && !category && !ingredients){
-      dishes = await knex('dishes')
-      .select('*')
-      .orderBy('name');
-    }
+    const dishesRepository = new DishesRepository();
+    const dishesIndexService = new DishesIndexService(dishesRepository);
+    const dishes = await dishesIndexService.execute({ name, category, ingredients });
 
-    if(ingredients){
-      dishes = await knex('ingredients')
-      .select([
-        'dishes.id',
-        'dishes.name',
-        'dishes.description',
-        'dishes.price',
-        'dishes.category',
-      ])
-      .whereLike("ingredients.name", `%${ingredients}%`)
-      .innerJoin('dishes', 'dishes.id', 'ingredients.dishes_id')
-      .groupBy('dishes.id')
-      .orderBy('dishes.name');
-    }
-
-    if(category){
-      dishes = await knex('dishes')
-      .select('*')
-      .where('category', category)
-      .orderBy('name');
-    }
-
-    const dishIngredients = await knex('ingredients').select('*');
-
-    const dishesWithIngredients = dishes.map(dish => {
-      const ingredientsWithDishId = dishIngredients.filter(ingredient => ingredient.dishes_id === dish.id);
-      const [...ingredientName] = ingredientsWithDishId.map(ingredient => ingredient.name);
-      return{
-        ...dish,
-        ingredients: ingredientName
-      }
-    });
-
-    return response.json(dishesWithIngredients);
+    return response.json(dishes);
   }
 
   async show(request, response) {
@@ -96,29 +51,11 @@ class DishesController {
     const { id } = request.params;
     const { name, description, price, category, ingredients } = request.body;
 
-    await knex('dishes').where({ id }).update({
-      name,
-      description,
-      price,
-      category
-    });
+    const dishesRepository = new DishesRepository();
+    const dishesUpdateService = new DishesUpdateService(dishesRepository);
+    const dish = await dishesUpdateService.execute({ id, name, description, price, category, ingredients });
 
-    if(ingredients){
-      const ingredientsArray = ingredients.map(ingredient => ingredient.trim());
-
-      await knex('ingredients').where({ dishes_id: id }).delete();
-
-      const ingredientsInsert = ingredientsArray.map(name =>{
-        return{
-          name,
-          dishes_id: id
-        }
-      });
-
-      await knex('ingredients').insert(ingredientsInsert);
-    }
-
-    return response.json()
+    return response.json(dish)
   }
 
 
