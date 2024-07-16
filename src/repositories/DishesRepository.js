@@ -33,7 +33,7 @@ class DishesRepository {
 
     if(!name && !category && !ingredients){
       dishes = await knex('dishes')
-      .select('*')
+      .select('id', 'name', 'description', 'price', 'category')
       .orderBy('name');
     }
 
@@ -50,6 +50,19 @@ class DishesRepository {
       .innerJoin('dishes', 'dishes.id', 'ingredients.dishes_id')
       .groupBy('dishes.id')
       .orderBy('dishes.name');
+    }
+
+    if(name){
+      dishes = await knex('dishes')
+      .select({
+        id: 'dishes.id',
+        name: 'dishes.name',
+        description: 'dishes.description',
+        price: 'dishes.price',
+        category: 'dishes.category',
+      })
+      .whereLike("dishes.name", `%${name}%`)
+      .orderBy('name');
     }
 
     if(category){
