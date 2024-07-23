@@ -6,9 +6,12 @@ class DishesCreateService {
   }
 
   async execute({ name, description, price, category, ingredients }) {
-
+   
     if(!name || !description || !price || !category || !ingredients) {
       throw new AppError('Todos os campos devem ser preenchidos.', 400);
+    }
+    if(ingredients.length < 1) {
+      throw new AppError('O prato deve ter pelo menos 1 ingrediente.', 400);
     }
 
 

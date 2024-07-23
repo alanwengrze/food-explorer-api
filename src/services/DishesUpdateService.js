@@ -5,7 +5,7 @@ class DishesUpdateService {
     this.dishesRepository = dishesRepository;
   }
 
-  async execute({ id, name, description, price, category, ingredients }) {
+  async execute({ id, name, description, price, category, ingredients, image }) {
     const dish = await this.dishesRepository.findById(id);
 
     if(!dish) {
@@ -27,7 +27,7 @@ class DishesUpdateService {
       throw new AppError('O preço deve ser maior que 0.', 400);
     }
 
-    const dishUpdated = await this.dishesRepository.update({ id, name, description, price, category, ingredients });
+    const dishUpdated = await this.dishesRepository.update({ id, name, description, price, category, ingredients, image });
 
     return dishUpdated;
   }

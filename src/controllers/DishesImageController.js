@@ -4,6 +4,16 @@ const DiskStorage = require('../providers/DiskStorage');
 
 class DishesImageController {
 
+  async create (request, response) {
+    const imageDish = request.file.filename;
+    const diskStorage = new DiskStorage();
+
+    const filename = await diskStorage.saveFile(imageDish);
+
+    const dish = await knex('dishes').insert({ image: filename });
+    return response.json(dish);
+  }
+
   async update(request, response) {
     const { id } = request.params;
     const imageDish = request.file.filename;

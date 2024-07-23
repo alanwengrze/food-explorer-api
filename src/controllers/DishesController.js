@@ -1,6 +1,8 @@
 const knex = require('../database/knex');
 const AppError = require('../utils/AppError');
 
+const DiskStorage = require('../providers/DiskStorage');
+
 const DishesRepository = require('../repositories/DishesRepository');
 const DishesCreateService = require('../services/DishesCreateService');
 const DishesIndexService = require('../services/DishesIndexService');

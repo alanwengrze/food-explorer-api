@@ -1,12 +1,12 @@
 const knex = require('../database/knex');
-
 class DishesRepository {
 
   async findById(id) {
     const dish = await knex('dishes').where({ id }).first();
     return dish;
   }
-  async create({ name, description, price, category, ingredients }) {
+  async create({ name, description, price, category, ingredients, image}) {
+
     const [ dishes_id ] = await knex('dishes').insert({
       name,
       description,
@@ -33,7 +33,7 @@ class DishesRepository {
 
     if(!name && !category && !ingredients){
       dishes = await knex('dishes')
-      .select('id', 'name', 'description', 'price', 'category')
+      .select('id', 'name', 'description', 'price', 'category', 'image')
       .orderBy('name');
     }
 
@@ -45,6 +45,7 @@ class DishesRepository {
         'dishes.description',
         'dishes.price',
         'dishes.category',
+        'dishes.image',
       ])
       .whereLike("ingredients.name", `%${ingredients}%`)
       .innerJoin('dishes', 'dishes.id', 'ingredients.dishes_id')
@@ -60,6 +61,7 @@ class DishesRepository {
         description: 'dishes.description',
         price: 'dishes.price',
         category: 'dishes.category',
+        image: 'dishes.image'
       })
       .whereLike("dishes.name", `%${name}%`)
       .orderBy('name');
