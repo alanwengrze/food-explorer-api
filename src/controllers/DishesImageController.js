@@ -10,7 +10,9 @@ class DishesImageController {
 
     const filename = await diskStorage.saveFile(imageDish);
 
-    const dish = await knex('dishes').insert({ image: filename });
+    const dish = await knex('dishes').insert({ 
+      image: filename,
+    });
     return response.json(dish);
   }
 

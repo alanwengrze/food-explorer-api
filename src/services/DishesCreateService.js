@@ -5,7 +5,7 @@ class DishesCreateService {
     this.dishesRepository = dishesRepository;
   }
 
-  async execute({ name, description, price, category, ingredients }) {
+  async execute({ name, description, price, category, ingredients, image }) {
    
     if(!name || !description || !price || !category || !ingredients) {
       throw new AppError('Todos os campos devem ser preenchidos.', 400);
@@ -14,8 +14,11 @@ class DishesCreateService {
       throw new AppError('O prato deve ter pelo menos 1 ingrediente.', 400);
     }
 
+    if(price < 2 || price > 500) {
+      throw new AppError('O preço deve ser maior que R$2,00 e menor que R$500,00.', 400);
+    }
 
-    const dish = await this.dishesRepository.create({ name, description, price, category, ingredients });
+    const dish = await this.dishesRepository.create({ name, description, price, category, ingredients, image });
     return dish;
   }
 }

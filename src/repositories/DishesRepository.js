@@ -11,7 +11,8 @@ class DishesRepository {
       name,
       description,
       price,
-      category
+      category,
+      image
     });
 
       const ingredientsInsert = ingredients.map(name =>{

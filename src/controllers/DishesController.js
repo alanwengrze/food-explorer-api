@@ -10,11 +10,11 @@ const DishesUpdateService = require('../services/DishesUpdateService');
 class DishesController {
 
   async create(request, response) {
-    const {name, description, price, category, ingredients} = request.body;
+    const {name, description, price, category, ingredients, image} = request.body;
 
     const dishesRepository = new DishesRepository();
     const dishesCreateService = new DishesCreateService(dishesRepository);
-    const dish = await dishesCreateService.execute({name, description, price, category, ingredients});
+    const dish = await dishesCreateService.execute({name, description, price, category, ingredients, image});
 
     return response.status(201).json(dish);
   }
