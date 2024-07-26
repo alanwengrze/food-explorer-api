@@ -10,11 +10,17 @@ const DishesUpdateService = require('../services/DishesUpdateService');
 class DishesController {
 
   async create(request, response) {
-    const {name, description, price, category, ingredients, image} = request.body;
+    const {name, description, price, category, ingredients} = request.body;
+
+    const diskStorage = new DiskStorage();
+    const image = request.file.filename;
+    const filename = await diskStorage.saveFile(image);
+
+    
 
     const dishesRepository = new DishesRepository();
     const dishesCreateService = new DishesCreateService(dishesRepository);
-    const dish = await dishesCreateService.execute({name, description, price, category, ingredients, image});
+    const dish = await dishesCreateService.execute({name, description, price, category, ingredients, image: filename});
 
     return response.status(201).json(dish);
   }
