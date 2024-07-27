@@ -56,7 +56,8 @@ Para ter uma experiência completa, é necessário utilizar o frontend da aplica
 - [**pm2**](https://www.npmjs.com/package/pm2)
 
 ## Deploy
-[Render](https://render.com/)
+[Render](https://render.com/).
+
 Acesse ao deploy do [food-explorer](https://alnfoodexplorer.netlify.app/)
 
 ## Licença

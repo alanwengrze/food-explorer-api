@@ -1,4 +1,5 @@
 const AppError = require('../utils/AppError');
+const DiskStorage = require('../providers/DiskStorage');
 class DishesCreateService {
 
   constructor(dishesRepository) {
@@ -17,8 +18,11 @@ class DishesCreateService {
     if(price < 2 || price > 500) {
       throw new AppError('O preço deve ser maior que R$2,00 e menor que R$500,00.', 400);
     }
+    const diskStorage = new DiskStorage();
+   
+    const filename = await diskStorage.saveFile(image);
 
-    const dish = await this.dishesRepository.create({ name, description, price, category, ingredients, image });
+    const dish = await this.dishesRepository.create({ name, description, price, category, ingredients, image: filename});
     return dish;
   }
 }

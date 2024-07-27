@@ -15,14 +15,21 @@ class DishesRepository {
       image
     });
 
-      const ingredientsInsert = ingredients.map(name =>{
-        return{
-          name,
-          dishes_id
-        }
-    });
+    //transform string to array
+    const ingredientsArray = ingredients.split(',').map(ingredient => ingredient.trim());
+
+    //percorre o array e retorna o nome e o id
+    const ingredientsInsert = ingredientsArray.map(name => {
+      return {
+        name,
+        dishes_id
+      }
+    })
+
+    //insere os ingredientes
     await knex('ingredients').insert(ingredientsInsert);
 
+    //retorna o id
     return {
       dishes_id,
       ingredientsInsert

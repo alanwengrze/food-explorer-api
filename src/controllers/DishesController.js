@@ -1,8 +1,6 @@
 const knex = require('../database/knex');
 const AppError = require('../utils/AppError');
 
-const DiskStorage = require('../providers/DiskStorage');
-
 const DishesRepository = require('../repositories/DishesRepository');
 const DishesCreateService = require('../services/DishesCreateService');
 const DishesIndexService = require('../services/DishesIndexService');
@@ -12,15 +10,16 @@ class DishesController {
   async create(request, response) {
     const {name, description, price, category, ingredients} = request.body;
 
-    const diskStorage = new DiskStorage();
+    if(!request.file){
+      throw new AppError('Imagem obrigatória.', 400);
+    }
+
     const image = request.file.filename;
-    const filename = await diskStorage.saveFile(image);
-
     
-
+    
     const dishesRepository = new DishesRepository();
     const dishesCreateService = new DishesCreateService(dishesRepository);
-    const dish = await dishesCreateService.execute({name, description, price, category, ingredients, image: filename});
+    const dish = await dishesCreateService.execute({name, description, price, category, ingredients, image});
 
     return response.status(201).json(dish);
   }
