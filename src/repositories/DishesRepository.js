@@ -5,6 +5,11 @@ class DishesRepository {
     const dish = await knex('dishes').where({ id }).first();
     return dish;
   }
+
+  async findByName(name) {
+    const dish = await knex('dishes').where({ name }).first();
+    return dish;
+  }
   async create({ name, description, price, category, ingredients, image}) {
 
     const [ dishes_id ] = await knex('dishes').insert({

@@ -7,6 +7,12 @@ class DishesCreateService {
   }
 
   async execute({ name, description, price, category, ingredients, image }) {
+
+    const dishExists = await this.dishesRepository.findByName(name);
+
+    if(dishExists) {
+      throw new AppError('Esse prato já existe.', 400);
+    }
    
     if(!name || !description || !price || !category || !ingredients) {
       throw new AppError('Todos os campos devem ser preenchidos.', 400);
@@ -18,11 +24,11 @@ class DishesCreateService {
     if(price < 2 || price > 500) {
       throw new AppError('O preço deve ser maior que R$2,00 e menor que R$500,00.', 400);
     }
-    const diskStorage = new DiskStorage();
+    // const diskStorage = new DiskStorage();
    
-    const filename = await diskStorage.saveFile(image);
+    // const filename = await diskStorage.saveFile(image);
 
-    const dish = await this.dishesRepository.create({ name, description, price, category, ingredients, image: filename});
+    const dish = await this.dishesRepository.create({ name, description, price, category, ingredients, image});
     return dish;
   }
 }
