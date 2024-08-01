@@ -6,6 +6,7 @@ Foodexplorer é o projeto de conclusão da trilha explorer da [Rocketseat](https
   - [Pré-requisitos](#pré-requisitos)
   - [Instalação](#instruções-de-instalação)
   - [Como utilizar](#como-utilizar)
+  - [Rotas](#rotas-da-aplicação)
   - [frontend](#frontend-da-aplicação)
   - [Tecnologias utilizadas](#tecnologias-utilizadas)
   - [Deploy](#deploy)
@@ -42,6 +43,9 @@ npm run dev
 ```
 Com a conta admin, o usuário consegue fazer o CRUD dos pratos.
 
+## Rotas da aplicação
+[Rotas](./.github/routes.md)
+
 ## Frontend da aplicação
 Para ter uma experiência completa, é necessário utilizar o frontend da aplicação. Você pode acessar o [**frontend clicando aqui**](https://github.com/alanwengrze/food-explorer-frontend).
 
@@ -54,6 +58,7 @@ Para ter uma experiência completa, é necessário utilizar o frontend da aplica
 - [**jsonwebtoken**](https://www.npmjs.com/package/jsonwebtoken)
 - [**knex**](https://www.npmjs.com/package/knex)
 - [**pm2**](https://www.npmjs.com/package/pm2)
+- [**multer**](https://www.npmjs.com/package/multer)
 
 ## Deploy
 [Render](https://render.com/).
